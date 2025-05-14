@@ -2,7 +2,9 @@
 
 ## Description
 
-This Chrome extension adds a button to YouTube video pages. Its main purpose is to help you get the best summary of a video for free. Clicking the button automatically prepares a prompt with the video link, opens Gemini AI in a new tab, and then injects the prompt into Gemini and submits it. This allows you to quickly get a summary and learn what the video has to offer without watching the entire thing or manually copying and pasting.
+This Chrome extension lets you summarize any YouTube video with just a single click using Gemini's native YouTube adapter and LLM capabilities. Simply click the "G" button that appears under any YouTube video and watch the magic happen as Gemini generates a comprehensive summary of the content. No need to watch the entire video or manually copy-paste links - the extension handles everything automatically. 
+
+**Note:** You must be logged into your Gemini account for the extension to work properly.
 
 ## Installation
 
