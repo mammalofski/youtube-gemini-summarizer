@@ -1,6 +1,6 @@
 # YouTube Gemini Assistant
 
-This Chrome extension adds a button next to the like button on YouTube videos. Clicking this button will open Gemini AI, allowing you to interact with it in the context of the video you are watching.
+This Chrome extension adds a button next to the like button on YouTube videos. Its main purpose is to help you get the best summary of the video for free. Clicking this button will open Gemini AI, allowing you to interact with it in the context of the video you are watching.
 
 ## Features
 
@@ -10,7 +10,7 @@ This Chrome extension adds a button next to the like button on YouTube videos. C
 ## Installation
 
 1.  **Download or Clone the Repository:**
-    *   Download the ZIP and extract it, or clone this repository to your local machine using `git clone <repository_url>`.
+    *   Download the ZIP and extract it, or clone this repository to your local machine using `git clone https://github.com/mammalofski/youtube-gemini-summarizer`.
 
 2.  **Open Chrome/Edge Extensions Page:**
     *   Open your Chrome or Edge browser and navigate to `chrome://extensions` or `edge://extensions`.
@@ -29,9 +29,13 @@ This Chrome extension adds a button next to the like button on YouTube videos. C
 
 ## How to Use
 
+This tool is meant to give you the best summary of the video for free by doing the following:
+
 1.  Navigate to any YouTube video page (e.g., `https://www.youtube.com/watch?v=...`).
 2.  You should see a new button appearing near the "Like" and "Dislike" buttons. The button's appearance will be styled by `css/overlay.css` and its functionality is managed by `js/content.js`.
-3.  Click this button to open the Gemini AI interface.
+3.  Click this button. This will copy the video's transcript (if available) to your clipboard and open the Gemini AI webpage in a new tab.
+4.  Once navigated to the Gemini webpage, press `Ctrl+V` (or `Cmd+V` on Mac) to paste the transcript into the input field.
+5.  Hit Enter. Gemini will read the transcription and give you the best summary so you don't have to watch the entire video yet learn all it has to offer.
 
 ## Files
 
