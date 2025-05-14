@@ -101,18 +101,27 @@ function checkAndAddButton() {
   console.log('YouTube Gemini Assistant: Successfully added button');
 }
 
-// Function to open Gemini in a new tab and copy text
+// Function to send a message to the background script to open Gemini and paste the prompt
 function openGeminiInNewTab() {
   const videoUrl = window.location.href;
   const textToCopy = `Summarize and write the keypoints to learn and remember from the following video ${videoUrl}`;
 
-  navigator.clipboard.writeText(textToCopy).then(() => {
-    console.log('YouTube Gemini Assistant: Text copied to clipboard!');
-    // Open Gemini in a new tab after successful copy
-    window.open('https://gemini.google.com/app', '_blank');
-  }).catch(err => {
-    console.error('YouTube Gemini Assistant: Failed to copy text: ', err);
-    // Still open Gemini in a new tab even if copy fails
-    window.open('https://gemini.google.com/app', '_blank');
+  chrome.runtime.sendMessage({ action: "openGeminiAndPaste", prompt: textToCopy }, (response) => {
+    if (chrome.runtime.lastError) {
+      console.error('YouTube Gemini Assistant: Error sending message to background script:', chrome.runtime.lastError.message);
+      // Fallback or error handling if needed, e.g., revert to old behavior or notify user
+      // For now, just log it.
+      // As a simple fallback, we can try the old method:
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        console.log('YouTube Gemini Assistant: Text copied to clipboard (fallback)!');
+        window.open('https://gemini.google.com/app', '_blank');
+      }).catch(err => {
+        console.error('YouTube Gemini Assistant: Failed to copy text (fallback): ', err);
+        window.open('https://gemini.google.com/app', '_blank'); // Still try to open Gemini
+      });
+    } else {
+      console.log('YouTube Gemini Assistant: Message sent to background script.');
+      // response object might be useful if your background script sends one
+    }
   });
 }

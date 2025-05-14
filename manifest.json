@@ -16,6 +16,9 @@
     },
     "default_title": "YouTube Gemini Assistant"
   },
+  "background": {
+    "service_worker": "js/background.js"
+  },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
@@ -29,5 +32,6 @@
       "matches": ["*://*.youtube.com/*"]
     }
   ],
-  "permissions": ["activeTab", "clipboardWrite"]
+  "permissions": ["activeTab", "clipboardWrite", "scripting", "clipboardRead"],
+  "host_permissions": ["*://*.youtube.com/*", "*://gemini.google.com/*"]
 }
