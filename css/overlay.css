@@ -18,7 +18,7 @@
 }
 
 .gemini-icon {
-  background-color: #8e24aa;
+  background-color: #8e24aa; /* Fallback if animations/gradients not supported */
   color: white;
   border-radius: 50%;
   font-size: 16px;
@@ -30,12 +30,48 @@
   justify-content: center;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+
+  /* Added for animations and shine effect */
+  position: relative;
+  overflow: hidden;
+  /* Wave of purple colors */
+  background-image: linear-gradient(
+    120deg,
+    #8e24aa, /* Original purple */
+    #b39ddb, /* Lighter purple */
+    #6a1b9a, /* Darker purple (hover color) */
+    #b39ddb, /* Lighter purple */
+    #8e24aa  /* Original purple */
+  );
+  background-size: 250% 100%; /* Increased size for a more noticeable wave with these colors */
+  animation:
+    wave 4s linear infinite; /* Removed heartbeat animation */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Enhanced text readability */
+}
+
+/* Shine sweep effect for the gemini icon */
+.gemini-icon::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%; /* Start off-screen */
+  width: 100%; /* Cover half the button for a more subtle shine */
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35), /* Slightly more subtle shine */
+    transparent
+  );
+  transform: skewX(-25deg); /* Angled wave */
+  animation: wave-movement 3s linear infinite; /* Existing wave-movement keyframes */
+  z-index: 1; /* Above background, below text content ('G') */
 }
 
 .gemini-button:hover .gemini-icon {
-  background-color: #6a1b9a;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  transform: scale(1.05);
+  background-color: #6a1b9a; /* Keep background color change */
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); /* Keep shadow change */
+  /* transform: scale(1.05); Removed scaling on hover */
 }
 
 .gemini-tooltip {
@@ -132,4 +168,148 @@ ytd-menu-renderer .gemini-button,
   flex: 1;
   width: 100%;
   border: none;
+}
+
+/* Animated shiny button */
+.animated-shiny-button {
+  position: relative; /* For pseudo-element positioning */
+  padding: 15px 30px;
+  font-size: 16px;
+  color: white; /* Text color - ensure good contrast with background */
+  background-color: #007bff; /* Fallback background color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  overflow: hidden; /* To contain the wave pseudo-element */
+  transition: transform 0.1s ease-out; /* For click feedback */
+  outline: none; /* Remove default outline, ensure focus visibility via other means if needed */
+
+  /* Glossy effect using a subtle gradient */
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.1) 51%, rgba(0, 0, 0, 0) 100%);
+
+  /* Animations */
+  animation: wave 3s linear infinite; /* Removed heartbeat animation */
+  /* Ensure text is readable */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.animated-shiny-button:hover {
+  background-color: #0056b3; /* Darken button on hover */
+}
+
+.animated-shiny-button:active {
+  transform: scale(0.98); /* Click feedback */
+}
+
+/* Wave animation pseudo-element */
+.animated-shiny-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%; /* Start off-screen */
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4), /* Wave color */
+    transparent
+  );
+  transform: skewX(-25deg); /* Angled wave */
+  animation: wave-movement 3s linear infinite;
+  z-index: 1; /* Ensure wave is above background but below text */
+}
+
+/* Keyframes for the wave movement */
+@keyframes wave-movement {
+  0% {
+    left: -150%;
+  }
+  100% {
+    left: 150%; /* Move across the button */
+  }
+}
+
+/* Keyframes for the heartbeat pulse */
+/* @keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.01); 
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.01); 
+  }
+  70% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+} */ /* Commented out heartbeat keyframes */
+
+/* Keyframes for a color-changing wave (alternative or combined with ::before element) */
+/* This example changes the button's main background gradient */
+@keyframes wave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Apply a dynamic background for the wave animation if not using the pseudo-element exclusively */
+.animated-shiny-button {
+  /* Example gradient for the wave animation - customize colors as needed */
+  /* Ensure these colors provide good contrast with the text color */
+  background-image: linear-gradient(
+    120deg,
+    #007bff, /* Start color */
+    #00c6ff, /* Mid color */
+    #007bff  /* End color, creating a loop */
+  );
+  background-size: 200% 100%; /* Make the background wider than the button to allow movement */
+  animation: wave 3s linear infinite; /* Removed heartbeat animation */
+}
+
+/* Reduced motion considerations */
+@media (prefers-reduced-motion: reduce) {
+  .animated-shiny-button,
+  .animated-shiny-button::before,
+  .gemini-icon,
+  .gemini-icon::before { /* Added .gemini-icon and .gemini-icon::before */
+    animation-duration: 0.01ms !important; /* Effectively pauses animation */
+    animation-iteration-count: 1 !important; /* Play only once */
+    transition-duration: 0.01ms !important; /* Effectively disables transitions */
+  }
+  /* You might want to provide a static but still appealing style here */
+  .animated-shiny-button {
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.05) 51%, rgba(0, 0, 0, 0) 100%);
+    background-color: #007bff; /* Static background */
+  }
+  .animated-shiny-button::before {
+    background: none; /* Remove the wave element */
+  }
+  /* Static fallback for gemini-icon if animations are reduced */
+  .gemini-icon {
+    background-image: none; /* Remove animated gradient */
+    background-color: #8e24aa; /* Revert to static background color */
+    /* Other static styles can be ensured here if needed */
+  }
+  .gemini-icon::before {
+    background: none; /* Remove shine sweep */
+  }
+}
+
+/* Ensure focus is visible for accessibility if default outline is removed */
+.animated-shiny-button:focus {
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #007bff; /* Example focus ring */
 }
