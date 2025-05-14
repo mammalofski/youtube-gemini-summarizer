@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Gemini Assistant",
+  "version": "1.0.0",
+  "description": "Adds a button next to the like button on YouTube videos to open Gemini AI",
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    },
+    "default_title": "YouTube Gemini Assistant"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["js/content.js"],
+      "css": ["css/overlay.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["images/*", "css/*"],
+      "matches": ["*://*.youtube.com/*"]
+    }
+  ],
+  "permissions": ["activeTab", "clipboardWrite"]
+}

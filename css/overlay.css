@@ -1,0 +1,135 @@
+/* YouTube Gemini Assistant - Styles */
+
+/* Gemini button */
+.gemini-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  position: relative;
+  padding: 0;
+  height: 36px;
+  width: 36px;
+  vertical-align: middle;
+  z-index: 5;
+}
+
+.gemini-icon {
+  background-color: #8e24aa;
+  color: white;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.gemini-button:hover .gemini-icon {
+  background-color: #6a1b9a;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  transform: scale(1.05);
+}
+
+.gemini-tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  bottom: -36px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.gemini-button:hover .gemini-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Ensure button is visible even when YouTube changes its styles */
+#actions-inner .gemini-button,
+#top-level-buttons-computed .gemini-button,
+ytd-menu-renderer .gemini-button,
+#actions .gemini-button {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  margin: 0 4px !important;
+}
+
+/* Overlay styles */
+.gemini-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gemini-overlay-content {
+  background-color: white;
+  width: 90%;
+  height: 90%;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.gemini-overlay-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: #8e24aa;
+  color: white;
+}
+
+.gemini-overlay-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.gemini-close-button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gemini-close-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.gemini-iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+}
