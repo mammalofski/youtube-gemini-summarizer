@@ -17,6 +17,11 @@ const observer = new MutationObserver(() => {
   if (window.location.pathname.includes('/watch') && !document.getElementById('gemini-button')) {
     checkAndAddButton();
   }
+  
+  // Check for thumbnails on non-watch pages
+  if (!window.location.pathname.includes('/watch')) {
+    checkAndAddThumbnailButtons();
+  }
 });
 
 // Observe DOM changes more aggressively
@@ -27,15 +32,22 @@ setInterval(() => {
   if (window.location.pathname.includes('/watch') && !document.getElementById('gemini-button')) {
     checkAndAddButton();
   }
+  // Also check for thumbnail buttons on non-watch pages
+  if (!window.location.pathname.includes('/watch')) {
+    checkAndAddThumbnailButtons();
+  }
 }, 2000);
 
 // Main initialization function
 function initExtension() {
-  // Only run on video pages
-  if (!window.location.pathname.includes('/watch')) return;
-  
-  // Add a small delay to ensure YouTube's UI is fully loaded
-  setTimeout(checkAndAddButton, 1500);
+  // Check if we're on a video page or other YouTube pages
+  if (window.location.pathname.includes('/watch')) {
+    // Add a small delay to ensure YouTube's UI is fully loaded
+    setTimeout(checkAndAddButton, 1500);
+  } else {
+    // We're on home, search, channel, or other pages with thumbnails
+    setTimeout(checkAndAddThumbnailButtons, 1500);
+  }
 }
 
 // Check if our button exists and add it if not
@@ -122,6 +134,122 @@ function openGeminiInNewTab() {
     } else {
       console.log('YouTube Gemini Assistant: Message sent to background script.');
       // response object might be useful if your background script sends one
+    }
+  });
+}
+
+// Function to check and add buttons to video thumbnails on YouTube's main pages
+function checkAndAddThumbnailButtons() {
+  // Selectors for different types of video renderers on YouTube
+  const thumbnailSelectors = [
+    'ytd-rich-item-renderer',      // Home page, search results (grid view)
+    'ytd-video-renderer',           // Search results (list view), channel videos
+    'ytd-grid-video-renderer',     // Channel page grid view
+    'ytd-compact-video-renderer'   // Sidebar recommendations, playlist items
+  ];
+  
+  thumbnailSelectors.forEach(selector => {
+    const thumbnails = document.querySelectorAll(selector);
+    
+    thumbnails.forEach(thumbnail => {
+      // Skip if we've already added a button to this thumbnail
+      if (thumbnail.hasAttribute('data-gemini-button-added')) {
+        return;
+      }
+      
+      // Find the video link to extract the URL
+      const videoLink = thumbnail.querySelector('a#thumbnail, a#video-title, a.yt-simple-endpoint, a.yt-lockup-view-model__content-image, a.yt-lockup-metadata-view-model__title');
+      
+      if (!videoLink) {
+        console.log('YouTube Gemini Assistant: No video link found in', selector);
+        return; // No video link found, skip this thumbnail
+      }
+      
+      // Extract video URL
+      let videoUrl = videoLink.href;
+      
+      // Skip if this is not a valid video URL
+      if (!videoUrl || !videoUrl.includes('/watch?v=')) {
+        return;
+      }
+      
+      // Convert relative URL to absolute if needed
+      if (videoUrl.startsWith('/')) {
+        videoUrl = 'https://www.youtube.com' + videoUrl;
+      }
+      
+      // Find a good place to insert the button (below the video metadata)
+      let insertionPoint = null;
+      
+      // Try different locations based on the thumbnail type
+      if (selector === 'ytd-rich-item-renderer') {
+        // New YouTube layout uses yt-lockup-metadata-view-model
+        insertionPoint = thumbnail.querySelector('yt-lockup-metadata-view-model .yt-lockup-metadata-view-model__text-container');
+        // Fallback to older layouts
+        if (!insertionPoint) {
+          insertionPoint = thumbnail.querySelector('#details, #dismissible, ytd-rich-grid-media');
+        }
+      } else if (selector === 'ytd-video-renderer') {
+        insertionPoint = thumbnail.querySelector('#metadata, #meta, #metadata-line');
+      } else if (selector === 'ytd-grid-video-renderer') {
+        insertionPoint = thumbnail.querySelector('#details, #metadata, ytd-video-meta-block');
+      } else if (selector === 'ytd-compact-video-renderer') {
+        insertionPoint = thumbnail.querySelector('#metadata, #meta, #metadata-line');
+      }
+      
+      if (!insertionPoint) {
+        console.log('YouTube Gemini Assistant: Could not find insertion point for', selector);
+        return; // Couldn't find a good place to insert the button
+      }
+      
+      // Create the Gemini button for thumbnails
+      const geminiThumbnailButton = document.createElement('button');
+      geminiThumbnailButton.className = 'gemini-thumbnail-button';
+      geminiThumbnailButton.setAttribute('aria-label', 'Ask Gemini about this video');
+      geminiThumbnailButton.innerHTML = `
+        <span class="gemini-thumbnail-icon">G</span>
+        <span class="gemini-thumbnail-text">Ask Gemini</span>
+      `;
+      
+      // Add click event
+      geminiThumbnailButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openGeminiWithThumbnailUrl(videoUrl);
+      });
+      
+      // Insert the button
+      try {
+        insertionPoint.appendChild(geminiThumbnailButton);
+        console.log('YouTube Gemini Assistant: Added thumbnail button for', videoUrl);
+      } catch (error) {
+        console.error('YouTube Gemini Assistant: Error appending button:', error);
+        return;
+      }
+      
+      // Mark this thumbnail as processed
+      thumbnail.setAttribute('data-gemini-button-added', 'true');
+    });
+  });
+}
+
+// Function to open Gemini with a video URL from a thumbnail
+function openGeminiWithThumbnailUrl(videoUrl) {
+  const textToCopy = `tell me everything there is to take out from this video in a short and concise summary ${videoUrl}`;
+
+  chrome.runtime.sendMessage({ action: "openGeminiAndPaste", prompt: textToCopy }, (response) => {
+    if (chrome.runtime.lastError) {
+      console.error('YouTube Gemini Assistant: Error sending message to background script:', chrome.runtime.lastError.message);
+      // Fallback
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        console.log('YouTube Gemini Assistant: Text copied to clipboard (fallback)!');
+        window.open('https://gemini.google.com/app', '_blank');
+      }).catch(err => {
+        console.error('YouTube Gemini Assistant: Failed to copy text (fallback): ', err);
+        window.open('https://gemini.google.com/app', '_blank');
+      });
+    } else {
+      console.log('YouTube Gemini Assistant: Message sent to background script for thumbnail.');
     }
   });
 }

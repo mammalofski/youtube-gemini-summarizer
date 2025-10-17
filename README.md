@@ -2,9 +2,22 @@
 
 ## Description
 
-This Chrome extension lets you summarize any YouTube video with just a single click using Gemini's native YouTube adapter and LLM capabilities. Simply click the "G" button that appears under any YouTube video and watch the magic happen as Gemini generates a comprehensive summary of the content. No need to watch the entire video or manually copy-paste links - the extension handles everything automatically. 
+This Chrome extension lets you summarize any YouTube video with just a single click using Gemini's native YouTube adapter and LLM capabilities. The extension works in two ways:
+
+1. **Video Watch Page**: Click the "G" button that appears next to the like/dislike buttons on any YouTube video to get a comprehensive summary
+2. **Video Thumbnails**: Click the "Ask Gemini" button that appears below video thumbnails on YouTube's home page, search results, and channel pages to instantly summarize videos without opening them first
+
+No need to watch the entire video or manually copy-paste links - the extension handles everything automatically. 
 
 **Note:** You must be logged into your Gemini account for the extension to work properly.
+
+## Features
+
+- 🎯 **One-Click Summarization**: Get instant video summaries from the watch page
+- 🔍 **Thumbnail Quick Access**: Summarize videos directly from search results, home page, and channel pages
+- 🤖 **Powered by Gemini**: Uses Google's Gemini AI with native YouTube video understanding
+- ⚡ **Seamless Integration**: Automatically opens Gemini and submits your request
+- 🎨 **Beautiful UI**: Stylish buttons that blend naturally with YouTube's interface
 
 ## Installation
 
