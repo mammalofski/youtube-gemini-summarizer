@@ -178,37 +178,37 @@ function checkAndAddThumbnailButtons() {
         videoUrl = 'https://www.youtube.com' + videoUrl;
       }
       
-      // Find a good place to insert the button (below the video metadata)
-      let insertionPoint = null;
+      // Find the three-dot menu button to insert our button next to it
+      let menuButton = null;
       
       // Try different locations based on the thumbnail type
       if (selector === 'ytd-rich-item-renderer') {
-        // New YouTube layout uses yt-lockup-metadata-view-model
-        insertionPoint = thumbnail.querySelector('yt-lockup-metadata-view-model .yt-lockup-metadata-view-model__text-container');
+        // New YouTube layout - find the menu button container
+        menuButton = thumbnail.querySelector('.yt-lockup-metadata-view-model__menu-button, button-view-model');
         // Fallback to older layouts
-        if (!insertionPoint) {
-          insertionPoint = thumbnail.querySelector('#details, #dismissible, ytd-rich-grid-media');
+        if (!menuButton) {
+          menuButton = thumbnail.querySelector('#menu, ytd-menu-renderer');
         }
       } else if (selector === 'ytd-video-renderer') {
-        insertionPoint = thumbnail.querySelector('#metadata, #meta, #metadata-line');
+        menuButton = thumbnail.querySelector('#menu, ytd-menu-renderer, #menu-container');
       } else if (selector === 'ytd-grid-video-renderer') {
-        insertionPoint = thumbnail.querySelector('#details, #metadata, ytd-video-meta-block');
+        menuButton = thumbnail.querySelector('#menu, ytd-menu-renderer');
       } else if (selector === 'ytd-compact-video-renderer') {
-        insertionPoint = thumbnail.querySelector('#metadata, #meta, #metadata-line');
+        menuButton = thumbnail.querySelector('#menu, ytd-menu-renderer');
       }
       
-      if (!insertionPoint) {
-        console.log('YouTube Gemini Assistant: Could not find insertion point for', selector);
-        return; // Couldn't find a good place to insert the button
+      if (!menuButton) {
+        console.log('YouTube Gemini Assistant: Could not find menu button for', selector);
+        return; // Couldn't find the menu button
       }
       
-      // Create the Gemini button for thumbnails
+      // Create the Gemini button for thumbnails (icon only)
       const geminiThumbnailButton = document.createElement('button');
       geminiThumbnailButton.className = 'gemini-thumbnail-button';
       geminiThumbnailButton.setAttribute('aria-label', 'Ask Gemini about this video');
+      geminiThumbnailButton.setAttribute('title', 'Ask Gemini');
       geminiThumbnailButton.innerHTML = `
         <span class="gemini-thumbnail-icon">G</span>
-        <span class="gemini-thumbnail-text">Ask Gemini</span>
       `;
       
       // Add click event
@@ -218,12 +218,12 @@ function checkAndAddThumbnailButtons() {
         openGeminiWithThumbnailUrl(videoUrl);
       });
       
-      // Insert the button
+      // Insert the button BEFORE the menu button (so it appears to the left)
       try {
-        insertionPoint.appendChild(geminiThumbnailButton);
+        menuButton.parentNode.insertBefore(geminiThumbnailButton, menuButton);
         console.log('YouTube Gemini Assistant: Added thumbnail button for', videoUrl);
       } catch (error) {
-        console.error('YouTube Gemini Assistant: Error appending button:', error);
+        console.error('YouTube Gemini Assistant: Error inserting button:', error);
         return;
       }
       

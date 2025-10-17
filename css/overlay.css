@@ -314,68 +314,61 @@ ytd-menu-renderer .gemini-button,
   box-shadow: 0 0 0 2px white, 0 0 0 4px #007bff; /* Example focus ring */
 }
 
-/* Thumbnail button styles */
+/* Thumbnail button styles - Icon only, positioned next to three-dot menu */
 .gemini-thumbnail-button {
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  gap: 6px;
   background-color: transparent;
-  border: 1px solid #8e24aa;
-  border-radius: 18px;
-  padding: 6px 12px;
-  margin-top: 8px;
-  margin-bottom: 4px;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  margin: -8px 15px 0 0 !important;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
-  color: #8e24aa;
-  transition: all 0.2s ease;
+  width: 40px;
+  height: 40px;
+  transition: background-color 0.2s ease;
   position: relative;
-  overflow: hidden;
-  width: fit-content;
+  overflow: visible;
+  flex-shrink: 0;
+  vertical-align: middle;
   z-index: 10;
 }
 
 .gemini-thumbnail-button:hover {
-  background-color: #8e24aa;
-  color: white;
-  box-shadow: 0 2px 4px rgba(142, 36, 170, 0.3);
-  transform: translateY(-1px);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
-.gemini-thumbnail-button:active {
-  transform: translateY(0);
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .gemini-thumbnail-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 }
 
 .gemini-thumbnail-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  background-color: #8e24aa;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #8e24aa 0%, #b39ddb 100%);
   color: white;
   border-radius: 50%;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: bold;
   flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
 }
 
 .gemini-thumbnail-button:hover .gemini-thumbnail-icon {
-  background-color: white;
-  color: #8e24aa;
+  transform: scale(1.1);
+  box-shadow: 0 2px 4px rgba(142, 36, 170, 0.4);
 }
 
-.gemini-thumbnail-text {
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-/* Ensure thumbnail buttons don't interfere with video clicks */
-.gemini-thumbnail-button {
-  z-index: 10;
+.gemini-thumbnail-button:active .gemini-thumbnail-icon {
+  transform: scale(0.95);
 }
 
 /* Make sure the button is visible in different YouTube layouts */
@@ -388,32 +381,39 @@ ytd-compact-video-renderer .gemini-thumbnail-button {
   visibility: visible !important;
 }
 
-/* Specific placement for new YouTube layout */
+/* Ensure proper alignment with YouTube's menu button */
 yt-lockup-metadata-view-model .gemini-thumbnail-button {
-  display: inline-flex !important;
-  margin-top: 8px;
-  margin-bottom: 4px;
+  align-self: flex-start;
+  margin-top: 0;
 }
 
-.yt-lockup-metadata-view-model__text-container .gemini-thumbnail-button {
+/* The parent container that holds our button and the menu button */
+yt-lockup-metadata-view-model {
+  position: relative;
+}
+
+/* Position next to the menu button container - ensure they're inline and aligned */
+.yt-lockup-metadata-view-model__menu-button {
   display: inline-flex !important;
+  align-items: flex-start !important;
+}
+
+/* Make sure both buttons align at the same baseline */
+ytd-rich-item-renderer .gemini-thumbnail-button,
+ytd-rich-item-renderer .yt-lockup-metadata-view-model__menu-button {
+  vertical-align: top;
 }
 
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
   .gemini-thumbnail-button {
-    font-size: 11px;
-    padding: 5px 10px;
-    gap: 4px;
+    width: 36px;
+    height: 36px;
   }
   
   .gemini-thumbnail-icon {
-    width: 16px;
-    height: 16px;
-    font-size: 10px;
-  }
-  
-  .gemini-thumbnail-text {
+    width: 20px;
+    height: 20px;
     font-size: 11px;
   }
 }
